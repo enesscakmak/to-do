@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Your To-Do List</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-+0n0xVW2eSR5OomGNYDnhzAbDsOXxcvSN1TPprVMTNDbiYZCxYbOOl7+AMvyTG2x" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-HwwvtgBNo3bZJJLYd8oVXjrBZt8cqVSpeBNS5n7C8IVInixGAoxmnlMuBnhbgrkm" crossorigin="anonymous"></script>
+</head>
+<body class="text-light bg-dark">
+
+
+    <div class="page-header">
+        <table class="table">
+        <thead>
+<tr>
+            <th scope="col">Title</th>
+            <th scope="col">Description</th>
+            <th scope="col">Priority</th>
+            <th scope="col">Finish By</th>
+            <th scope="col">Completed</th>
+            <th scope="col">Options</th>
+            <th scope="col">Details</th>
+
+</tr>
+        </thead>
+        <tbody>
+        {% for task in tasks %}
+        <tr>
+            <td>{{task.title}}</td>
+            <td class="text-truncate" style="max-width:150px")>{{task.description}}</td>
+            <td>{{task.priority}}</td>
+            <td>{{task.finish_by}}</td>
+            <td>{{task.completed}}</td>
+            <td> <a href="/edit/{{task.id}}">Edit</a></td>
+            <td><a href="/delete/{{task.id}}">Delete</a></td>
+            <td><a href="/details/{{task.id}}">Details</a></td>
+        </tr>
+        {% endfor %}
+        </tbody>
+        </table>
+        </div>
+
+</body>
+</html>
