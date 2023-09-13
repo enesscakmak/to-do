@@ -1,6 +1,7 @@
-// $(document).ready(function () {
-//     $('.datepicker').datepicker({
-//         format: 'dd.mm.yyyy',  // Adjust the date format as needed
-//         autoclose: true
-//     });
-// });
+$(document).ready(function () {
+    $('#finish_by').datepicker({
+        format: 'yyyy-mm-dd',
+        autoclose: true,
+        todayHighlight: true
+    });
+});
