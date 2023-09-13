@@ -8,6 +8,10 @@
     <title>Add New Task</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQIu9" crossorigin="anonymous">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-HwwvtgBNo3bZJJLYd8oVXjrBZt8cqVSpeBNS5n7C8IVInixGAoxmnlMuBnhbgrkm" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-datepicker@1.12.0/dist/css/bootstrap-datepicker.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap-datepicker@1.12.0/dist/js/bootstrap-datepicker.min.js"></script>
+
+
 </head>
 <body class="bg-dark text-light">
 <form method="POST">
@@ -28,6 +32,16 @@
     </div>
     <button type="submit" class="btn btn-primary">Add Task</button>
 </form>
+<script>
+    // Initialize the date picker for the finish_by field
+    $(document).ready(function () {
+        $('#finish_by').datepicker({
+            format: 'dd.mm.yyyy',
+            autoclose: true,
+            todayHighlight: true
+        });
+    });
+</script>
 
 </body>
 </html>
