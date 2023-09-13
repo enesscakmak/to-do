@@ -7,7 +7,7 @@ from flask_bootstrap import Bootstrap5
 from flask_wtf import FlaskForm
 from wtforms import StringField, SubmitField, IntegerField, BooleanField
 from wtforms.validators import DataRequired
-
+from wtforms.fields import DateField
 from models import db, Task
 
 app = Flask(__name__)
@@ -21,8 +21,8 @@ app.config['SECRET_KEY'] = SECRET_KEY
 class AddTaskForm(FlaskForm):
     title = StringField('Title', validators=[DataRequired()])
     description = StringField('Description')
-    priority = IntegerField('Priority', validators=[DataRequired()])
-    finish_by = StringField('Finish by', validators=[DataRequired()])
+    priority = IntegerField('Priority')
+    finish_by = DateField('Finish by', format="%Y-%m-%d")
     completed = BooleanField('Complete')
     submit = SubmitField('Add')
 
@@ -31,9 +31,10 @@ class EditTaskForm(FlaskForm):
     title = StringField('Title', validators=[DataRequired()])
     description = StringField('Description')
     priority = IntegerField('Priority', validators=[DataRequired()])
-    finish_by = StringField('Finish by', validators=[DataRequired()])
+    finish_by = DateField('Finish by', format="%Y-%m-%d")
     completed = BooleanField('Complete')
     submit = SubmitField('Update')
+
 
 @app.route('/')
 def index():
@@ -49,8 +50,13 @@ def tasks():
 def add():
     form = AddTaskForm()
     if form.validate_on_submit():
-        new_task = Task(title=form.title.data,description=form.description.data, priority=form.priority.data, finish_by=form.finish_by.data,
-                        completed=form.completed.data)
+        new_task = Task(
+            title=form.title.data,
+            description=form.description.data,
+            priority=form.priority.data,
+            finish_by=form.finish_by.data,
+            completed=form.completed.data
+            )
         db.session.add(new_task)
         db.session.commit()
         return redirect(url_for('tasks'))
@@ -79,11 +85,15 @@ def delete(id):
     db.session.commit()
     return redirect(url_for('tasks'))
 
+
 @app.route('/details/<int:id>', methods=['GET', 'POST'])
 def details(id):
     task = Task.query.get(id)
     return render_template('details.html', task=task)
 
+
+with app.app_context():
+    db.create_all()
 
 if __name__ == '__main__':
     app.run(debug=True)
