@@ -9,7 +9,7 @@ class Task(db.Model):
     title = db.Column(db.String(100), nullable=False)
     description = db.Column(db.Text())
     priority = db.Column(db.String(10), nullable=False)
-    finish_by = db.Column(Date)  # Use Date column type
+    finish_by = db.Column(Date)
     completed = db.Column(db.Boolean, default=False)
 
     def __init__(self, title, description, priority, finish_by, completed):

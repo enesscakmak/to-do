@@ -2,13 +2,15 @@
 
 import os
 
-from flask import Flask, render_template, redirect, url_for
+from flask import Flask, render_template, redirect, url_for, request, flash
 from flask_bootstrap import Bootstrap5
 from flask_wtf import FlaskForm
 from wtforms import StringField, SubmitField, IntegerField, BooleanField
-from wtforms.validators import DataRequired
+from wtforms.validators import DataRequired, ValidationError
 from wtforms.fields import DateField
 from models import db, Task
+from datetime import datetime, timedelta
+
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///project.db'
@@ -41,25 +43,38 @@ def index():
     return render_template('index.html')
 
 
-@app.route('/tasks')
-def tasks():
-    return render_template('tasks.html', tasks=Task.query.all())
+@app.route('/tasks', defaults={'page': 1})
+@app.route('/tasks/<int:page>')
+def tasks(page):
+    per_page = request.args.get('per_page', 5, type=int)
+    tasks_pagination = Task.query.paginate(page=page, per_page=per_page, error_out=False)
+    return render_template('tasks.html', tasks_pagination=tasks_pagination)
 
 
+@app.route('/add', methods=['GET', 'POST'])
 @app.route('/add', methods=['GET', 'POST'])
 def add():
     form = AddTaskForm()
     if form.validate_on_submit():
-        new_task = Task(
-            title=form.title.data,
-            description=form.description.data,
-            priority=form.priority.data,
-            finish_by=form.finish_by.data,
-            completed=form.completed.data
+        finish_by_date = form.finish_by.data
+        min_date = datetime.now().date()  # Convert to date to compare
+        max_date = (datetime.now() + timedelta(days=365 * 30)).date()  # Limit the max date by 30 years from now
+
+        if finish_by_date > max_date or finish_by_date < min_date:
+            flash("You can't enter a date before today or more than 30 years after today!", "danger")
+        else:
+            new_task = Task(
+                title=form.title.data,
+                description=form.description.data,
+                priority=form.priority.data,
+                finish_by=form.finish_by.data,
+                completed=form.completed.data
             )
-        db.session.add(new_task)
-        db.session.commit()
-        return redirect(url_for('tasks'))
+
+            db.session.add(new_task)
+            db.session.commit()
+            return redirect(url_for('tasks'))
+
     return render_template('add.html', form=form)
 
 

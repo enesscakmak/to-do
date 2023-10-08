@@ -13,6 +13,19 @@
 
 </head>
 <body class="bg-dark text-light">
+<div class="container">
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                <div class="alert alert-{{ messages[0][0] }}">
+                    <ul>
+                        {% for category, message in messages %}
+                            <li>{{ message }}</li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            {% endif %}
+        {% endwith %}
+
 <form method="POST">
     {{ form.hidden_tag() }}
     {{ form.csrf_token }}
