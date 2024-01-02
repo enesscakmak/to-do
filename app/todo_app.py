@@ -24,32 +24,35 @@ class ToDoApp:
         # OptionMenu for selecting themes
         self.clicked = tk.StringVar()
         self.clicked.set("arc")
-        themes = sorted(self.style.get_themes())  # Get all themes available on pc and sort
+        themes = sorted(self.style.get_themes())  # Get all themes available on pc and sort it
         themesMenu = ttk.OptionMenu(root, self.clicked, *themes)
         themesMenu.grid(row=6, column=0)
-        self.style.configure("TMenubutton", foreground="black", background="#f0f0f0", font=("Helvetica", 10), width=17)
+        self.style.configure("TMenubutton", foreground="black", background="#f0f0f0", width=19)
 
 
         # Button to apply the selected theme
-        applyThemeButton = ttk.Button(root, text="Apply Theme", command=self.change_theme)
-        applyThemeButton.grid(row=6, column=1)
+        applyThemeButton = ttk.Button(root, text="Apply Theme", command=self.change_theme, width=22)
+        applyThemeButton.grid(row=6, column=1, pady=10)
 
         self.style.configure("TLabel", foreground="black", background="#f0f0f0", font=("Helvetica", 10))
         # Create GUI elements
-        self.title_label = ttk.Label(root, text="To-Do List", font=("Helvetica", 16), background="#f0f0f0")
+        self.title_label = ttk.Label(root, text="Plan Everything", font=("Helvetica", 16), background="#f0f0f0")
         self.title_label.grid(row=0, column=0, columnspan=2, pady=10)
 
-        self.sort_by_title_button = ttk.Button(root, text="Sort by Title", command=self.sort_by_title)
+        self.sort_by_title_button = ttk.Button(root, text="Sort by Title", command=self.sort_by_title, width=22)
         self.sort_by_title_button.grid(row=1, column=0, padx=10, pady=5)
-        self.style.configure("TButton", foreground="black", width=22)
+        self.style.configure("TButton", foreground="black")
 
-        self.sort_by_priority_button = ttk.Button(root, text="Sort by Priority", command=self.sort_by_priority)
+        self.sort_by_priority_button = ttk.Button(root, text="Sort by Priority", command=self.sort_by_priority,
+                                                  width=22)
         self.sort_by_priority_button.grid(row=1, column=1, padx=10, pady=5)
 
-        self.sort_by_completion_time_button = ttk.Button(root, text="Sort by Completion Time", command=self.sort_by_completion_time)
+        self.sort_by_completion_time_button = ttk.Button(root, text="Sort by Completion Time",
+                                                         command=self.sort_by_completion_time, width=22)
         self.sort_by_completion_time_button.grid(row=2, column=0, padx=10, pady=5)
 
-        self.sort_by_completed_button = ttk.Button(root, text="Sort by Completed", command=self.sort_by_completed)
+        self.sort_by_completed_button = ttk.Button(root, text="Sort by Completed", command=self.sort_by_completed,
+                                                   width=22)
         self.sort_by_completed_button.grid(row=2, column=1, padx=10, pady=5)
 
         # Create Treeview with columns
@@ -76,16 +79,16 @@ class ToDoApp:
         root.columnconfigure(0, weight=1)
         root.columnconfigure(1, weight=1)
 
-        self.add_button = ttk.Button(root, text="Add Task", command=self.open_add_task_window)
+        self.add_button = ttk.Button(root, text="Add Task", command=self.open_add_task_window, width=22)
         self.add_button.grid(row=4, column=0, columnspan=1, pady=5)
 
-        self.edit_button = ttk.Button(root, text="Edit Task", command=self.open_edit_task_window)
+        self.edit_button = ttk.Button(root, text="Edit Task", command=self.open_edit_task_window, width=22)
         self.edit_button.grid(row=4, column=1, columnspan=1, pady=5)
 
-        self.remove_button = ttk.Button(root, text="Remove Task", command=self.remove_task)
+        self.remove_button = ttk.Button(root, text="Remove Task", command=self.remove_task, width=22)
         self.remove_button.grid(row=5, column=0, columnspan=1, pady=5)
 
-        self.complete_button = ttk.Button(root, text="Complete Task", command=self.complete_task)
+        self.complete_button = ttk.Button(root, text="Complete Task", command=self.complete_task, width=22)
         self.complete_button.grid(row=5, column=1, columnspan=1, pady=5)
 
         # Save tasks to JSON file when the application is closed
@@ -100,13 +103,12 @@ class ToDoApp:
         style = ttkthemes.ThemedStyle(root)
         style.theme_use(self.clicked.get())
 
-
     def sort_by_title(self):
         self.tasks.sort(key=lambda task: task["title"])
         self.update_task_list()
 
     def sort_by_priority(self):
-        self.tasks.sort(key=lambda task: task["priority"])
+        self.tasks.sort(key=lambda task: int(task["priority"]))
         self.update_task_list()
 
     def sort_by_completion_time(self):
