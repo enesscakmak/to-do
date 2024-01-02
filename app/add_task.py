@@ -1,5 +1,7 @@
 import tkinter as tk
 from tkinter import ttk
+from datetime import datetime
+from tkinter import messagebox
 
 class AddTaskWindow:
     def __init__(self, parent):
@@ -24,7 +26,9 @@ class AddTaskWindow:
         self.priority_label = ttk.Label(self.window, text="Priority:", background="#f0f0f0")
         self.priority_label.grid(row=2, column=0, padx=10, pady=5)
 
-        self.priority_entry = ttk.Entry(self.window)
+        # Entry for Priority with validation
+        vcmd = (self.window.register(self.validate_priority), "%P")
+        self.priority_entry = ttk.Entry(self.window, validate="key", validatecommand=vcmd)
         self.priority_entry.grid(row=2, column=1, padx=10, pady=5)
 
         self.finish_by_label = ttk.Label(self.window, text="Finish By:", background="#f0f0f0")
@@ -46,6 +50,15 @@ class AddTaskWindow:
         self.add_button = ttk.Button(self.window, text="Add Task", command=self.add_task)
         self.add_button.grid(row=5, columnspan=2, pady=10)
 
+    def validate_priority(self, entry):
+        if entry == "":  # Checks to see if entry is empty, otherwise you can't delete what you wrote
+            return True
+        try:
+            priority = int(entry)
+            return 0 < priority <= 100  # Priority must be between 1 and 100
+        except ValueError:
+            return False
+
     def add_task(self):
         title = self.title_entry.get()
         description = self.description_entry.get()
@@ -53,7 +66,13 @@ class AddTaskWindow:
         finish_by = self.finish_by_entry.get()
         completed = self.varCompleted.get()
 
-        if title and description and priority and finish_by:
+        try:
+            datetime.strptime(finish_by, "%Y-%m-%d")  # year-month-day format
+        except ValueError:
+            tk.messagebox.showerror("Error", "Invalid date format. Please use YYYY-MM-DD.")
+            return
+
+        if title and description and priority and finish_by:  # Check if all fields are filled before saving
             self.parent.add_task(title, description, priority, finish_by, completed)
             self.window.destroy()
 
