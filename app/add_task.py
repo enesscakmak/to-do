@@ -2,11 +2,13 @@ import tkinter as tk
 from tkinter import ttk
 from datetime import datetime
 from tkinter import messagebox
+from tkcalendar import DateEntry
+
 
 class AddTaskWindow:
     def __init__(self, parent):
         self.parent = parent
-        self.window = tk.Toplevel()
+        self.window = tk.Toplevel()  # Create window
         self.window.title("Add Task")
         self.center_window()
         self.window.resizable(False, False)
@@ -14,27 +16,33 @@ class AddTaskWindow:
         self.title_label = ttk.Label(self.window, text="Title:", background="#f0f0f0")
         self.title_label.grid(row=0, column=0, padx=10, pady=5)
 
-        self.title_entry = ttk.Entry(self.window)
+        self.title_entry = ttk.Entry(self.window, foreground="black")
         self.title_entry.grid(row=0, column=1, padx=10, pady=5)
 
         self.description_label = ttk.Label(self.window, text="Description:", background="#f0f0f0")
         self.description_label.grid(row=1, column=0, padx=10, pady=5)
 
-        self.description_entry = ttk.Entry(self.window)
+        self.description_entry = ttk.Entry(self.window, foreground="black")
         self.description_entry.grid(row=1, column=1, padx=10, pady=5)
 
         self.priority_label = ttk.Label(self.window, text="Priority:", background="#f0f0f0")
         self.priority_label.grid(row=2, column=0, padx=10, pady=5)
 
-        # Entry for Priority with validation
+        # Validation for priority
         vcmd = (self.window.register(self.validate_priority), "%P")
-        self.priority_entry = ttk.Entry(self.window, validate="key", validatecommand=vcmd)
+        self.priority_entry = ttk.Entry(self.window, validate="key", validatecommand=vcmd, foreground="black")
         self.priority_entry.grid(row=2, column=1, padx=10, pady=5)
 
         self.finish_by_label = ttk.Label(self.window, text="Finish By:", background="#f0f0f0")
         self.finish_by_label.grid(row=3, column=0, padx=10, pady=5)
 
-        self.finish_by_entry = ttk.Entry(self.window)
+        # Use this if you don't want to install tkcalendar
+        # self.finish_by_entry = ttk.Entry(self.window, foreground="black")
+
+        # Use this if you want to install tkcalendar ( pip install tkcalendar )
+        self.finish_by_entry = DateEntry(self.window, date_pattern="yyyy-mm-dd", background="#f0f0f0",
+                                         foreground="black", borderwidth=2, mindate=datetime.now().date())
+        #
         self.finish_by_entry.grid(row=3, column=1, padx=10, pady=5)
 
         self.completed_label = ttk.Label(self.window, text="Completed:", background="#f0f0f0")
@@ -84,7 +92,7 @@ class AddTaskWindow:
         window_width = self.window.winfo_width()
         window_height = self.window.winfo_height()
 
-        # Get parent window width, height, and position
+        # Get main window width, height, and position
         parent_width = self.parent.root.winfo_width()
         parent_height = self.parent.root.winfo_height()
         parent_x = self.parent.root.winfo_rootx()
