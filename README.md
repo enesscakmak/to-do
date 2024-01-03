@@ -1,8 +1,8 @@
 # To-Do App
 Basic to-do project to practice coding. Both in web and as a app.  
 
-[Go to App Version](#-app)  
-[Go to Web Version](#-web)
+[Go to App Version](#app)  
+[Go to Web Version](#web)
 
 # App
 
