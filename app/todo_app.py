@@ -19,23 +19,23 @@ class ToDoApp:
         self.load_tasks()
 
         self.style = ttkthemes.ThemedStyle(root)
-        self.style.set_theme("arc")  # Starting theme(adapta looks perfect too)
+        self.style.set_theme("arc")  # Starting theme(adapta looks perfect too, i set it as default
+        # selection in OptionMenu so you can directly click Apply Theme to try it)
 
         # OptionMenu for selecting themes
         self.clicked = tk.StringVar()
-        self.clicked.set("arc")
+        self.clicked.set("adapta")  # Default selection for OptionMenu
         themes = sorted(self.style.get_themes())  # Get all themes available on pc and sort it
         themesMenu = ttk.OptionMenu(root, self.clicked, *themes)
         themesMenu.grid(row=6, column=0)
-        self.style.configure("TMenubutton", foreground="black", background="#f0f0f0", width=19)
-
+        themesMenu.config(width=19)
+        self.style.configure("TMenubutton", foreground="black", background="#f0f0f0")
 
         # Button to apply the selected theme
         applyThemeButton = ttk.Button(root, text="Apply Theme", command=self.change_theme, width=22)
         applyThemeButton.grid(row=6, column=1, pady=10)
 
         self.style.configure("TLabel", foreground="black", background="#f0f0f0", font=("Helvetica", 10))
-        # Create GUI elements
         self.title_label = ttk.Label(root, text="Plan Everything", font=("Helvetica", 16), background="#f0f0f0")
         self.title_label.grid(row=0, column=0, columnspan=2, pady=10)
 
@@ -75,8 +75,11 @@ class ToDoApp:
                 self.task_treeview.column(col, width=20, stretch=tk.NO)
 
         # Add weight configuration for rows and columns
-        root.rowconfigure(3, weight=1)
+        # These lines are to make the app responsive
+        # First is index, and weight specifies how much additional space will it gain when resized
+        root.rowconfigure(0, weight=1)
         root.columnconfigure(0, weight=1)
+        root.rowconfigure(3, weight=1)
         root.columnconfigure(1, weight=1)
 
         self.add_button = ttk.Button(root, text="Add Task", command=self.open_add_task_window, width=22)
@@ -95,14 +98,14 @@ class ToDoApp:
         root.protocol("WM_DELETE_WINDOW", self.on_close)
 
         self.update_task_list()
-        # Make the GUI responsive to window resizing
-        root.rowconfigure(0, weight=1)
-        root.columnconfigure(0, weight=1)
 
     def change_theme(self):
         style = ttkthemes.ThemedStyle(root)
         style.theme_use(self.clicked.get())
 
+    # Sorting functions
+    # You can add reverse=True if you want to sort by descending order
+    # Example: self.tasks.sort(key=lambda task: task["title"], reverse=True)
     def sort_by_title(self):
         self.tasks.sort(key=lambda task: task["title"])
         self.update_task_list()
@@ -133,7 +136,7 @@ class ToDoApp:
             "description": description,
             "priority": priority,
             "finish_by": finish_by,
-            "completed": bool(completed)  # Convert to boolean
+            "completed": bool(completed)
         }
 
         self.tasks.append(task)
@@ -141,9 +144,9 @@ class ToDoApp:
         self.save_tasks()
 
     def remove_task(self):
-        selected_item = self.task_treeview.selection()
+        selected_item = self.task_treeview.selection()  # Get selected item from Treeview
         if selected_item:
-            task_index = int(self.task_treeview.index(selected_item))
+            task_index = int(self.task_treeview.index(selected_item[0]))
             del self.tasks[task_index]
             self.update_task_list()
             self.save_tasks()
@@ -167,9 +170,9 @@ class ToDoApp:
         screen_height = self.root.winfo_screenheight()
 
         # Calculate position of window's top-left corner
-        # 3 and 2.2 is because it was in middle of screen like this (for 1920x1080)
+        # 3.5 and 2.2 is because it was in middle of screen like this (for 1920x1080)
         # but i don't know for sure if it will be the same for every screen
-        position_top = int(screen_height / 3 - window_height / 2)
+        position_top = int(screen_height / 3.5 - window_height / 2)
         position_right = int(screen_width / 2.2 - window_width / 2)
 
         # Set the position of the window
